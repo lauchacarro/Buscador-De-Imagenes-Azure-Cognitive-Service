@@ -43,9 +43,8 @@ namespace BuscadorImagenes.Api.Controllers
 
             var imagenMultidioma = await _openAIService.GetImagenMultidiomaAsync(imagen);
 
-            imagenMultidioma.Id = Guid.NewGuid();
+
             imagenMultidioma.Url = imageUrl.ToString();
-            imagenMultidioma.FechaCarga = DateTimeOffset.Now;
 
 
             // Guarda los resultados en Azure Search

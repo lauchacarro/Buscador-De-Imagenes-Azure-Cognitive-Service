@@ -25,7 +25,6 @@
         {
             string endpoint = "https://buscador-imagenes-test-vision.cognitiveservices.azure.com/";
             string apikey = null;
-
             VisionServiceOptions visionServiceOptions = new VisionServiceOptions(endpoint, new AzureKeyCredential(apikey));
             return visionServiceOptions;
         }

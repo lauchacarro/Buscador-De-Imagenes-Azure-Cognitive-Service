@@ -17,10 +17,10 @@
         public AzureSearchService()
         {
 
-            _searchClient = CreateSearchClientForQueries();
+            _searchClient = CreateSearchClient();
         }
 
-        private static SearchClient CreateSearchClientForQueries()
+        private static SearchClient CreateSearchClient()
         {
             string searchServiceName = "https://buscador-imagenes-test-search.search.windows.net";
             string apiKey = null;
