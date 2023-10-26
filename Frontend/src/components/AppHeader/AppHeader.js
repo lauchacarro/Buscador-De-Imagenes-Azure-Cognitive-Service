@@ -8,7 +8,7 @@ export default function AppHeader() {
       <nav className="navbar navbar-expand-lg">
         <a className="navbar-brand" href="/">
           <img
-            src="https://mouron-it.com/assets/img/favicon5.png"
+            src="/images/mouron-it-logo.png"
             className="navbar-logo"
             alt="Mouron It"
           />
