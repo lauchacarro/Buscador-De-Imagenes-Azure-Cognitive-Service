@@ -1,0 +1,13 @@
+.header {
+    background-color: #e3f2fd;
+    color: #1a1818;
+}
+
+.navbar-logo {
+    width: 200px;
+    height: auto;
+}
+
+.nav-link { color: #1a1818; }
+.nav-link:hover { color: #1a1818; }
+
