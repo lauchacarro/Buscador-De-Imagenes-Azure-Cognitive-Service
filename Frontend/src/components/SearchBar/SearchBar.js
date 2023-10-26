@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from '../../axios.js';
 import Suggestions from './Suggestions/Suggestions';
-import { useLanguage } from '../../contexts/LanguageContext';
 
 import "./SearchBar.css";
 
@@ -10,7 +9,6 @@ export default function SearchBar(props) {
     let [q, setQ] = useState("");
     let [suggestions, setSuggestions] = useState([]);
     let [showSuggestions, setShowSuggestions] = useState(false);
-    const { selectedLanguage } = useLanguage();
 
     const onSearchHandler = () => {
         props.postSearchHandler(q);

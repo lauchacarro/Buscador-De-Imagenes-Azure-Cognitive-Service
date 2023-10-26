@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FormControl, InputLabel, MenuItem, Select, Box, Grid } from '@material-ui/core';
 
 import { useLanguage } from '../../contexts/LanguageContext'; // Importa el contexto

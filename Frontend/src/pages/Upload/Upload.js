@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import axios from '../../axios.js';
 import { Clear, CloudUploadOutlined } from "@material-ui/icons";
@@ -14,7 +14,7 @@ export default function Upload() {
   const [loading, setLoading] = useState(false);
   const hiddenFileInput = useRef(null);
 
-  const handleClick = (event) => {
+  const handleClick = () => {
     hiddenFileInput.current.click();
   };
   // Call a function (passed as a prop from the parent component)
@@ -104,7 +104,7 @@ export default function Upload() {
                         </div>
                       </div>
                       <div className="file-item justify-content-center">
-                        <img width={150} src={fileUrl} />
+                        <img width={150} alt="" src={fileUrl} />
                       </div>
 
                       <div className="file-item justify-content-center">
