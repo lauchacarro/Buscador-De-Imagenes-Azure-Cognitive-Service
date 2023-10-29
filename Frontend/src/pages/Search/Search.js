@@ -128,7 +128,7 @@ export default function Search() {
             <SearchBar postSearchHandler={postSearchHandler} q={q}></SearchBar>
           </div>
           <Facets
-            facets={getFacets()}
+            facets={facets}
             filters={filters}
             setFilters={setFilters}
           ></Facets>
