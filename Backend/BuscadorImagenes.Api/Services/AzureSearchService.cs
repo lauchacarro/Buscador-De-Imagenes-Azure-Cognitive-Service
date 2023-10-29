@@ -24,7 +24,7 @@
         {
             string searchServiceName = "https://buscador-imagenes-test-search.search.windows.net";
             string apiKey = null;
-            string indexName = "imagenes-multidioma-index-test1";
+            string indexName = "imagenes-multidioma-index";
 
             SearchClient searchClient = new SearchClient(new Uri(searchServiceName), indexName, new AzureKeyCredential(apiKey));
             return searchClient;
