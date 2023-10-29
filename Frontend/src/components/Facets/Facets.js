@@ -51,7 +51,7 @@ export default function Facets(props) {
 
   let newFacets = getFacetsByLanguage();
 
-  var facets;
+  let facets;
   try {
     facets = Object.keys(newFacets).map((key) => {
       return (

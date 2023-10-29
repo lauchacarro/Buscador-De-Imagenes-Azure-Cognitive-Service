@@ -7,7 +7,6 @@ import Results from "../../components/Results/Results";
 import Pager from "../../components/Pager/Pager";
 import Facets from "../../components/Facets/Facets";
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { useLanguage } from "../../contexts/LanguageContext";
 
 import "./Search.css";
 
@@ -28,7 +27,6 @@ export default function Search() {
   const [filters, setFilters] = useState([]);
   const [facets, setFacets] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  const { selectedLanguage } = useLanguage();
 
   let resultsPerPage = top;
 
@@ -54,30 +52,7 @@ export default function Search() {
       });
   }, [q, top, skip, filters]);
 
-  const getFacets = () => {
-    let newFacets = {};
-
-    for (let prop in facets) {
-      if (
-        facets.hasOwnProperty(prop) &&
-        prop.endsWith("_" + selectedLanguage)
-      ) {
-        newFacets[prop] = facets[prop].filter(function (item) {
-          return !item.value.endsWith("selectedLanguage");
-        });
-      }
-    }
-
-    for (let prop in newFacets) {
-      if (newFacets.hasOwnProperty(prop)) {
-        let newProp = prop.replace(/_(es|en|fr)$/, "");
-        newFacets[newProp] = newFacets[prop];
-        delete newFacets[prop];
-      }
-    }
-
-    return newFacets;
-  };
+  
   let postSearchHandler = (searchTerm) => {
     // pushing the new search term to history when q is updated
     // allows the back button to work as expected when coming back from the details page
