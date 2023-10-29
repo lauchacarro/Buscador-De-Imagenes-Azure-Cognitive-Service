@@ -6,6 +6,8 @@
 
     using BuscadorImagenes.Api.Models;
 
+    using Microsoft.AspNetCore.Mvc.Filters;
+
     using System;
     using System.Threading.Tasks;
 
@@ -24,7 +26,7 @@
         {
             string searchServiceName = "https://buscador-imagenes-test-search.search.windows.net";
             string apiKey = null;
-            string indexName = "imagenes-multidioma-index-test1";
+            string indexName = "imagenes-multidioma-index";
 
             SearchClient searchClient = new SearchClient(new Uri(searchServiceName), indexName, new AzureKeyCredential(apiKey));
             return searchClient;
@@ -39,12 +41,20 @@
             IndexDocumentsResult result = await _searchClient.IndexDocumentsAsync(batch);
         }
 
-        public async Task<SearchResult> SearchAsync(string search, int skip, int size)
+        public async Task<SearchResult> SearchAsync(string search, int skip, int size, IEnumerable<Models.FilterItem> filters)
         {
 
             SearchOptions options = new SearchOptions();
             options.Skip = skip;
             options.Size = size;
+            options.Facets.Add("etiquetas_es");
+            options.Facets.Add("etiquetas_en");
+            options.Facets.Add("etiquetas_fr");
+            options.Facets.Add("objetos_es");
+            options.Facets.Add("objetos_en");
+            options.Facets.Add("objetos_fr");
+
+            options.Filter = CreateFilterExpression(filters.ToList(), ReadFacets());
 
             options.IncludeTotalCount = true;
 
@@ -62,9 +72,89 @@
             result.Results = imagenes;
             result.Count = response.Value.TotalCount;
 
+            Dictionary<string, IList<FacetItem>> facets = new();
+
+            foreach (var facet in response.Value.Facets)
+            {
+                var key = facet.Key;
+
+                foreach (var item in facet.Value)
+                {
+                    if (facets.ContainsKey(key))
+                    {
+                        facets[key].Add(new FacetItem
+                        {
+                            Value = item.Value.ToString(),
+                            Count = item.Count.GetValueOrDefault()
+                        });
+                    }
+                    else
+                    {
+                        facets.Add(key, new List<FacetItem>
+                        {
+                            new FacetItem
+                            {
+                                Value = item.Value.ToString(),
+                                Count = item.Count.GetValueOrDefault()
+                            }
+
+                        });
+                    }
+                }
+            }
+
+            result.Facets = facets;
+
 
             return result;
         }
+
+        static string CreateFilterExpression(List<Models.FilterItem> filterList, Dictionary<string, string> facets)
+        {
+            int i = 0;
+            List<string> filterExpressions = new List<string>();
+
+            while (i < filterList.Count)
+            {
+                string field = filterList[i].Field;
+                string value = filterList[i].Value;
+
+                if (facets.ContainsKey(field) && facets[field] == "array")
+                {
+                    filterExpressions.Add($"{field}/any(t: search.in(t, '{value}', ','))");
+                }
+                else
+                {
+                    filterExpressions.Add($"{field} eq '{value}'");
+                }
+                i += 1;
+            }
+
+            return string.Join(" and ", filterExpressions);
+        }
+
+        static Dictionary<string, string> ReadFacets()
+        {
+            string facetString = "etiquetas_es*,etiquetas_en*,etiquetas_fr*,objetos_es*,objetos_en*,objetos_fr*";
+
+            string[] facets = facetString.Split(',');
+            Dictionary<string, string> output = new Dictionary<string, string>();
+
+            foreach (string f in facets)
+            {
+                if (f.Contains("*"))
+                {
+                    output[f.Replace("*", "")] = "array";
+                }
+                else
+                {
+                    output[f] = "string";
+                }
+            }
+
+            return output;
+        }
+
 
         public async Task<List<string>> AutocompleteAsync(string search)
         {

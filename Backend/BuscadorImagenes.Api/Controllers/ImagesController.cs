@@ -1,4 +1,5 @@
-﻿using BuscadorImagenes.Api.Services;
+﻿using BuscadorImagenes.Api.Models;
+using BuscadorImagenes.Api.Services;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,9 @@ namespace BuscadorImagenes.Api.Controllers
             _searchService = searchService;
             _openAIService = openAIService;
         }
+
+
+
 
         [HttpPost("Upload")]
         public async Task<IActionResult> UploadImage(IFormFile file)
@@ -62,10 +66,10 @@ namespace BuscadorImagenes.Api.Controllers
             return Ok(imagen);
         }
 
-        [HttpGet("Search")]
-        public async Task<IActionResult> Search(string search, int skip, int size)
+        [HttpPost("Search")]
+        public async Task<IActionResult> Search(SearchRequest request)
         {
-            var imagenes = await _searchService.SearchAsync(search, skip, size);
+            var imagenes = await _searchService.SearchAsync(request.Search, request.Skip, request.Size, request.Filters);
 
 
             return Ok(imagenes);
